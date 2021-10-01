@@ -1,0 +1,9 @@
+[submodule "CSS"]
+	path = CSS
+	url = https://github.com/HSINetwork/CSS.git
+[submodule "HTML"]
+	path = HTML
+	url = https://github.com/HSINetwork/HTML.git
+[submodule "JS"]
+	path = JS
+	url = https://github.com/HSINetwork/JS.git
