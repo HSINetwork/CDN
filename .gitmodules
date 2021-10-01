@@ -1,15 +1,3 @@
-[submodule "CSS"]
-	path = CSS
-	url = https://github.com/HSINetwork/CSS.git
-[submodule "HTML"]
-	path = HTML
-	url = https://github.com/HSINetwork/HTML.git
-[submodule "JS"]
-	path = JS
-	url = https://github.com/HSINetwork/JS.git
-[submodule "cdnContent/-f"]
-	path = cdnContent/-f
-	url = https://github.com/HSINetwork/CSS.git
 [submodule "cdnContent/CSS"]
 	path = cdnContent/CSS
 	url = https://github.com/HSINetwork/CSS.git
