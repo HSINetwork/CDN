@@ -5,16 +5,11 @@ var configClass = require("./../classes/configClass.js")
 function FR(configClass) {
 
     var HeadersMap = new Map()
-    console.log(configClass.filePath.substring(configClass.filePath.length - 5, configClass.filePath.length))
-    console.log(configClass.isRaw)
-    console.log("." + configClass.filePath)
-    console.log(fs.readFileSync("." + configClass.filePath))
 
     if (configClass.isRaw == false) {
 
         try {
-            console.log(configClass.isRaw)
-            fs.accessSync(configClass.filePath, fs.constants.R_OK)
+            fs.accessSync("." + configClass.filePath, fs.constants.R_OK)
             if (configClass.filePath.substring(configClass.filePath.length - 5, configClass.filePath.length) == ".html") {
                 console.log(configClass.filePath.substring(configClass.filePath.length - 5, configClass.filePath.length))
                 HeadersMap.set("statusCode", 200)
@@ -48,6 +43,6 @@ module.exports = {
     'FR': FR
 }
 
-var thingy = new configClass.cdnConfigClass(false, "/../cdnContent/HTML/Chat.html")
+var thingy = new configClass.cdnConfigClass(false, "/../cdnContent/JS/Chat.js")
 
 FR(thingy)
