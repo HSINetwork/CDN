@@ -1,8 +1,15 @@
 class CDNResponse {
+
+	public statusCode: number
+	public OH: Map<string, any>
+	public CT: string
+	public Body: string
+
     constructor(Body, Headers) {
         this.statusCode = Headers.statusCode,
         this.CT = Headers["Content-Type"]
         this.OH = Headers
+		this.Body = Body
     }
 
     editCT(newCT) {
@@ -14,17 +21,17 @@ class CDNResponse {
     }
     
     get concatCT() {
-        const COH = this.OH.add("Content-Type",this.CT)
+        const COH = this.OH["Content-Type"] = this.CT
         return COH
     }
 
     get concatAll() {
-        const COH = this.concatCT().add("statusCode",this.statusCode)
+        const COH = this.concatCT["statusCode"] = this.statusCode
         return COH
     }
 
     get concatAllWithBody() {
-        const COH = this.concatAll().add("body",this.Body)
+        const COH = this.concatAll["body"] = this.Body
         return COH
     }
 

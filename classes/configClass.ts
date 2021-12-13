@@ -1,5 +1,8 @@
 class CDNConfig {
-    constructor(Raw, Path) {
+	public isRaw: boolean
+	public filePath: string
+
+    constructor(Raw: boolean, Path: string) {
         this.isRaw = Raw,
         this.filePath = Path
     }

@@ -2,7 +2,21 @@ var fs = require("fs")
 var cdnResponse = require("./../classes/cdnResponse.js")
 var configClass = require("./../classes/configClass.js")
 
-function FR(configClass) {
+function comparePaths(path: string, numbersArray: number[], pathsArray: string[]) {
+	if (numbersArray.length != pathsArray.length) {
+		return new SyntaxError(`Passed array ${numbersArray.toString()} does not have the same length as ${pathsArray.toString()}`)
+	}
+	for (let i = 0; i < pathsArray.length; i++) {
+		if (path.substring(path.length - numbersArray[i], path.length) == pathsArray[i]) {
+			return path.substring(path.length - numbersArray[i], path.length)
+		} else {
+			continue;
+		}
+	}
+	return "plain"
+}
+
+function FR(configClass: configClass.CDNConfig) {
 
     var HeadersMap = new Map()
 
@@ -11,22 +25,18 @@ function FR(configClass) {
         try {
             fs.accessSync("." + configClass.filePath, fs.constants.R_OK)
             if (configClass.filePath.substring(configClass.filePath.length - 5, configClass.filePath.length) == ".html") {
-                console.log(configClass.filePath.substring(configClass.filePath.length - 5, configClass.filePath.length))
                 HeadersMap.set("statusCode", 200)
                 HeadersMap.set("Content-Type", "text/html")
                 var frCDNResponse = new cdnResponse.cdnResponseClass(fs.readdirSync(configClass.filePath), HeadersMap)
             } else if (configClass.filePath.substring(configClass.filePath.length - 4, configClass.filePath.length) == ".css") {
-                console.log(configClass.filePath.substring(configClass.filePath.length - 4, configClass.filePath.length))
                 HeadersMap.set("statusCode", 200)
                 HeadersMap.set("Content-Type", "text/css")
                 var frCDNResponse = new cdnResponse.cdnResponseClass(fs.readdirSync("." + configClass.filePath), HeadersMap)
             } else if (configClass.filePath.substring(configClass.filePath.length - 3, configClass.filePath.length) == ".js") {
-                console.log(configClass.filePath.substring(configClass.filePath.length - 3, configClass.filePath.length))
                 HeadersMap.set("statusCode", 200)
-                HeadersMap.set("Content-Type", "text/css")
+                HeadersMap.set("Content-Type", "text/js")
                 var frCDNResponse = new cdnResponse.cdnResponseClass(fs.readdirSync(configClass.filePath), HeadersMap)
             }
-
             return frCDNResponse
         } catch {
             HeadersMap.set("statusCode", 404)
@@ -42,7 +52,3 @@ function FR(configClass) {
 module.exports = {
     'FR': FR
 }
-
-var thingy = new configClass.cdnConfigClass(false, "/../cdnContent/JS/Chat.js")
-
-FR(thingy)
