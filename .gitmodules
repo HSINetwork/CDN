@@ -1,9 +1,12 @@
-[submodule "cdnContent/CSS"]
-	path = cdnContent/CSS
-	url = https://github.com/HSINetwork/CSS.git
-[submodule "cdnContent/HTML"]
-	path = cdnContent/HTML
-	url = https://github.com/HSINetwork/HTML.git
-[submodule "cdnContent/JS"]
-	path = cdnContent/JS
-	url = https://github.com/HSINetwork/JS.git
+[submodule "cdnContent/Scripts"]
+	path = cdnContent/Scripts
+	url = https://github.com/HSINetwork/Scripts.git
+[submodule "cdnContent/WWW"]
+	path = cdnContent/WWW
+	url = https://github.com/HSINetwork/WWW.git
+[submodule "cdnContent/Styles"]
+	path = cdnContent/Styles
+	url = https://github.com/HSINetwork/Styles.git
+[submodule "cdnContent/Images"]
+	path = cdnContent/Images
+	url = https://github.com/HSINetwork/Images.git
