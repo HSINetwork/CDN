@@ -3,9 +3,12 @@ const process = require("process")
 const child_process = require("child_process")
 
 npmlog.heading = "HSI Build Tool"
-npmlog.info("Main", "################")
-npmlog.info("Main", "# HSI Build Tool")
-npmlog.info("Main", "################")
+npmlog.info("Main", "██████████████████")
+npmlog.info("Main", "█                █░")
+npmlog.info("Main", "█ HSI Build Tool █░")
+npmlog.info("Main", "█                █░")
+npmlog.info("Main", "██████████████████░")
+npmlog.info("Main", " ░░░░░░░░░░░░░░░░░░")
 npmlog.info("Main", "")
 npmlog.info("Main", "Please wait...")
 
@@ -19,19 +22,15 @@ function errHandle(error, origin) {
 	if (origin != undefined) { npmlog.error("Main", `Origin: ${origin}`) }
 	process.exit(1)
 }
-/*
 process.on("uncaughtException", (error, origin) => errHandle)
-*/
 
 const buildConfig = require("./hsibuildsettings.json")
 npmlog.level = Infinity
 npmlog.verbose("Main", "Build Config found.")
 npmlog.verbose("Main", "Scanning for errors...")
 if (buildConfig.tasks == undefined || buildConfig["task-order"] == undefined) {
-	errHandle("BCErr", "The tasks object or the tasks-order object does not exist with in the hsibuildsettings.json file, are you sure you've got the right configuration file?")
-}
-if (buildConfig["task-order"].length == 0) {
-	errHandle("There doesn't appear to be any tasks to execute, this configuration is not supported, the application will now be terminated.")
+	npmlog.error("BCErr", "The tasks object or the tasks-order object does not exist with in the hsibuildsettings.json file, are you sure you've got the right configuration file?")
+	process.exit(1)
 }
 
 npmlog.info("Main", "No fatal errors found in the hsibuildsettings.json file.")
@@ -49,7 +48,7 @@ function EvalStatement(command) {
 }
 
 async function EvalStatements(object, name) {
-	if (object.sync != (true || false) || object.doesFail != (true || false) || object.commands == undefined || object.failText == undefined ) {
+	if (object.sync != true | false || object.doesFail == undefined || object.commands == undefined || object.failText == undefined) {
 		errHandle(new Error(`The current task does not have the correct structure.`))
 	}
 	if (object.sync == true) {
@@ -89,6 +88,10 @@ for (let i = 0; i < buildConfig["task-order"].length; i++) {
 	let buildConfig = require("./hsibuildsettings.json")
 	let objectName = buildConfig["task-order"][i]
 	let object = buildConfig.tasks[buildConfig["task-order"][i]]
+	if (buildConfig["task-order"].length == 0) {
+		npmlog.error("Main", "There doesn't appear to be any tasks to execute, this configuration is not supported, the application will now be terminated.")
+		break
+	}
 	trackers[objectName].tg.info(objectName, `Running task '${objectName}'.`)
 	EvalStatements(object, objectName)
 	trackers[objectName].tg.info(objectName, `Task '${objectName}' completed.`)
