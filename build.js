@@ -28,13 +28,10 @@ npmlog.level = Infinity
 npmlog.verbose("Main", "Build Config found.")
 npmlog.verbose("Main", "Scanning for errors...")
 if (buildConfig.tasks == undefined || buildConfig["task-order"] == undefined) {
-	npmlog.error("BCErr", "The tasks object or the tasks-order object does not exist with in the hsibuildsettings.json file, are you sure you've got the right configuration file?")
-	process.exit(1)
+	errHandle("BCErr", "The tasks object or the tasks-order object does not exist with in the hsibuildsettings.json file, are you sure you've got the right configuration file?")
 }
 if (buildConfig["task-order"].length == 0) {
-	npmlog.error("Main", "There doesn't appear to be any tasks to execute, this configuration is not supported, the application will now be terminated.")
-	npmlog.info("Main", "Build complete.")
-	process.exit(0)
+	errHandle("There doesn't appear to be any tasks to execute, this configuration is not supported, the application will now be terminated.")
 }
 
 npmlog.info("Main", "No fatal errors found in the hsibuildsettings.json file.")
