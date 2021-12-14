@@ -1,8 +1,4 @@
 {
-	"e": [
-		"compile-tsc",
-		"test"
-	],
 	"task-order": [
 		"snowpack"
 	],
