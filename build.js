@@ -6,7 +6,6 @@ npmlog.heading = "HSI Build Tool"
 npmlog.info("Main", "################")
 npmlog.info("Main", "# HSI Build Tool")
 npmlog.info("Main", "################")
-npmlog.info("Main", "This HSIBT is on the HSINetwork CDN.")
 npmlog.info("Main", "")
 npmlog.info("Main", "Please wait...")
 
@@ -20,7 +19,9 @@ function errHandle(error, origin) {
 	if (origin != undefined) { npmlog.error("Main", `Origin: ${origin}`) }
 	process.exit(1)
 }
+/*
 process.on("uncaughtException", (error, origin) => errHandle)
+*/
 
 const buildConfig = require("./hsibuildsettings.json")
 npmlog.level = Infinity
@@ -30,48 +31,72 @@ if (buildConfig.tasks == undefined || buildConfig["task-order"] == undefined) {
 	npmlog.error("BCErr", "The tasks object or the tasks-order object does not exist with in the hsibuildsettings.json file, are you sure you've got the right configuration file?")
 	process.exit(1)
 }
-npmlog.info("Main", "No fatal errors found in the hsibuildsettings.json file.")
-npmlog.info("Main", "Starting processes.")
+console.log(buildConfig["task-order"].length)
+if (buildConfig["task-order"].length == 0) {
+	npmlog.error("Main", "There doesn't appear to be any tasks to execute, this configuration is not supported, the application will now be terminated.")
+	npmlog.info("Main", "Build complete.")
+	process.exit(0)
+}
 
-function EvalStatements(object) {
-	try {
-		if (object.sync == true) {
-			for (let i = 0; i < object.commands.length, i++;) {
-				try {
-					let cp = child_process.spawnSync(object.command[i], {cwd: process.cwd, windowsHide: true})
-					cp.on("message", (message) => {
-						console.log(message)
-					})
-				} catch {
-					if (object.doesFail == true) {
-						errHandle(new Error(object.failText + "\nPlease see logs above."))
-					}
-				}
-			}
-		} else if (object.sync == false) {
-			for (var i = 0; i < object.commands.length; i++) {
-				try {
-					let cp = child_process.spawn(object.command[i], {cwd: process.cwd, windowsHide: true})
-					cp.on("message", (message) => {
-						console.log(message)
-					})
-				} catch {
-					if (object.doesFail == true) {
-						errHandle(new Error(object.failText + "\nPlease see logs above."))
-					}
-				}
-			}
+npmlog.info("Main", "No fatal errors found in the hsibuildsettings.json file.")
+npmlog.info("Main", "Please wait...")
+
+function EvalStatement(command) {
+	return new Promise((resolve, reject) => {
+		try {
+			let cp = child_process.execSync(command, {windowsHide: true})
+			resolve(cp)
+		} catch (error) {
+			reject(error)
 		}
-	} catch {
-		npmlog.error("BCErr", "The current object does not have correct commands.")
-		errHandle(new Error(`Build Command '${object.command[i]}' is invalid.`))
+	});
+}
+
+async function EvalStatements(object, name) {
+	if (object.sync != (true || false) || object.doesFail != (true || false) || object.commands == undefined || object.failText == undefined ) {
+		errHandle(new Error(`The current task does not have the correct structure.`))
+	}
+	if (object.sync == true) {
+		object.commands.forEach(element => {
+			trackers[name].t[element].info(name, `Executing ${[element]}`)
+			EvalStatement(element)
+			trackers[name].t[element].finish()
+		});
+	} else if (object.sync == false) {
+		object.commands.forEach(element => {
+			trackers[name].t[element].info(name, `Executing ${[element]}`)
+			EvalStatement(element)
+			trackers[name].t[element].finish()
+		});
+	}
+
+}
+
+// Load NPMLog progress bars
+
+npmlog.enableProgress()
+
+var trackers = {}
+
+for (let i = 0; i < buildConfig["task-order"].length; i++) {
+	let objectName = buildConfig["task-order"][i]
+	console.log()
+	let object = buildConfig.tasks[buildConfig["task-order"][i]]
+	trackers[objectName] = { tg: npmlog.newGroup(objectName), t: [] }
+	for (let v = 0; v < object.commands.length; v++) {
+		trackers[objectName].t[object.commands[v]] = trackers[objectName].tg.newItem(object.commands[v])
 	}
 }
 
-for (var i = 0; i < buildConfig["task-order"].length; i++) {
-	npmlog.info("Main", `Running task '${buildConfig["task-order"][i]}'.`)
-	EvalStatements(buildConfig.tasks[buildConfig["task-order"][i]])
-	npmlog.info("Main", `Task '${buildConfig["task-order"][i]}' completed.`)
+npmlog.info("Main", "Starting processes.")
+
+for (let i = 0; i < buildConfig["task-order"].length; i++) {
+	let buildConfig = require("./hsibuildsettings.json")
+	let objectName = buildConfig["task-order"][i]
+	let object = buildConfig.tasks[buildConfig["task-order"][i]]
+	trackers[objectName].tg.info(objectName, `Running task '${objectName}'.`)
+	EvalStatements(object, objectName)
+	trackers[objectName].tg.info(objectName, `Task '${objectName}' completed.`)
 }
 
 npmlog.info("Main", "Build complete.")
