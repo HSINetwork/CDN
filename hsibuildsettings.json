@@ -1,8 +1,5 @@
 {
 	"task-order": [
-		"compile-tsc",
-		"snowpack-web",
-		"test"
 	],
 	"tasks": {
 		"snowpack-web": {
