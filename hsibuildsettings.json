@@ -7,7 +7,7 @@
 			"sync": true,
 			"doesFail": true,
 			"commands": [
-				"npx snowpack build"
+				"npx snowpack build --config ./baseCdnContent/snowpack.config.js"
 			],
 			"failText": "Snowpack compilation failed."
 		}
