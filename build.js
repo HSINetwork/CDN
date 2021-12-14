@@ -31,7 +31,6 @@ if (buildConfig.tasks == undefined || buildConfig["task-order"] == undefined) {
 	npmlog.error("BCErr", "The tasks object or the tasks-order object does not exist with in the hsibuildsettings.json file, are you sure you've got the right configuration file?")
 	process.exit(1)
 }
-console.log(buildConfig["task-order"].length)
 if (buildConfig["task-order"].length == 0) {
 	npmlog.error("Main", "There doesn't appear to be any tasks to execute, this configuration is not supported, the application will now be terminated.")
 	npmlog.info("Main", "Build complete.")
@@ -80,7 +79,6 @@ var trackers = {}
 
 for (let i = 0; i < buildConfig["task-order"].length; i++) {
 	let objectName = buildConfig["task-order"][i]
-	console.log()
 	let object = buildConfig.tasks[buildConfig["task-order"][i]]
 	trackers[objectName] = { tg: npmlog.newGroup(objectName), t: [] }
 	for (let v = 0; v < object.commands.length; v++) {
