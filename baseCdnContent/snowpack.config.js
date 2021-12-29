@@ -8,12 +8,10 @@ module.exports = {
     /* ... */
   },
   plugins: [
-    [
-		["@snowpack/plugin-webpack"],
-		["@snowpack/plugin-sass"],
-		["@snowpack/plugin-postcss"],
-		["@snowpack/plugin-typescript"]
-	]
+	["@snowpack/plugin-webpack"],
+	["@snowpack/plugin-sass"],
+	["@snowpack/plugin-postcss"],
+	["@snowpack/plugin-typescript"]
   ],
   packageOptions: {
     /* ... */
